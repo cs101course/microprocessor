@@ -1,0 +1,22 @@
+{
+  "name": "@cs101/microprocessor",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/cs101course/microprocessor.git"
+  },
+  "author": "David Collien <david@openlearning.com>",
+  "license": "MIT",
+  "description": "Microprocessor Emulator for CS101",
+  "bugs": {
+    "url": "https://github.com/cs101course/microprocessor/issues"
+  },
+  "homepage": "https://github.com/cs101course/microprocessor#readme",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
