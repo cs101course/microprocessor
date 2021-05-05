@@ -8,7 +8,7 @@ import { Processor } from "../types";
 const robot = new RobotPeripheral();
 const speaker = new SpeakerPeripheral();
 
-export const proc4101: Processor<Robot & Speaker> = {
+export const processor: Processor<Robot & Speaker> = {
   memoryBitSize: 4,
   registerBitSize: 4,
   numMemoryAddresses: 16,

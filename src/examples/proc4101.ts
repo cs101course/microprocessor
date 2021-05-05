@@ -8,7 +8,7 @@ import { Processor } from "../types";
 const lcd = new LcdPeripheral();
 const speaker = new SpeakerPeripheral();
 
-export const proc4101: Processor<Lcd & Speaker> = {
+export const processor: Processor<Lcd & Speaker> = {
   memoryBitSize: 4,
   registerBitSize: 4,
   numMemoryAddresses: 16,
@@ -22,6 +22,38 @@ export const proc4101: Processor<Lcd & Speaker> = {
       description: "Halt",
       execute: (ps) => {
         ps.state.isHalted = true;
+      },
+      ipIncrement: 1
+    },
+    {
+      description: "Increment R0 (R0 = R0 + 1)",
+      execute: (ps) => {
+        const r0 = State.getRegister(ps, "R0");
+        State.setRegister(ps, "R0", r0 + 1);
+      },
+      ipIncrement: 1
+    },
+    {
+      description: "Decrement R0 (R0 = R0 - 1)",
+      execute: (ps) => {
+        const r0 = State.getRegister(ps, "R0");
+        State.setRegister(ps, "R0", r0 - 1);
+      },
+      ipIncrement: 1
+    },
+    {
+      description: "Increment R1 (R1 = R1 + 1)",
+      execute: (ps) => {
+        const r1 = State.getRegister(ps, "R1");
+        State.setRegister(ps, "R1", r1 + 1);
+      },
+      ipIncrement: 1
+    },
+    {
+      description: "Decrement R1 (R1 = R1 - 1)",
+      execute: (ps) => {
+        const r1 = State.getRegister(ps, "R1");
+        State.setRegister(ps, "R1", r1 - 1);
       },
       ipIncrement: 1
     },
@@ -40,38 +72,6 @@ export const proc4101: Processor<Lcd & Speaker> = {
         const r0 = State.getRegister(ps, "R0");
         const r1 = State.getRegister(ps, "R1");
         State.setRegister(ps, "R0", r0 - r1);
-      },
-      ipIncrement: 1
-    },
-    {
-      description: "Increment R0 (R0 = R0 + 1)",
-      execute: (ps) => {
-        const r0 = State.getRegister(ps, "R0");
-        State.setRegister(ps, "R0", r0 + 1);
-      },
-      ipIncrement: 1
-    },
-    {
-      description: "Increment R1 (R1 = R1 + 1)",
-      execute: (ps) => {
-        const r1 = State.getRegister(ps, "R1");
-        State.setRegister(ps, "R1", r1 + 1);
-      },
-      ipIncrement: 1
-    },
-    {
-      description: "Decrement R0 (R0 = R0 - 1)",
-      execute: (ps) => {
-        const r0 = State.getRegister(ps, "R0");
-        State.setRegister(ps, "R0", r0 - 1);
-      },
-      ipIncrement: 1
-    },
-    {
-      description: "Decrement R1 (R1 = R1 - 1)",
-      execute: (ps) => {
-        const r1 = State.getRegister(ps, "R1");
-        State.setRegister(ps, "R1", r1 - 1);
       },
       ipIncrement: 1
     },

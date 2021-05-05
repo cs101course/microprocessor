@@ -7,7 +7,7 @@ import { Processor } from "../types";
 const lcd = new LcdPeripheral();
 const speaker = new SpeakerPeripheral();
 
-export const proc4101: Processor<Lcd & Speaker> = {
+export const processor: Processor<Lcd & Speaker> = {
   memoryBitSize: 4,
   registerBitSize: 4,
   numMemoryAddresses: 16,
