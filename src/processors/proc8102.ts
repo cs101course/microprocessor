@@ -1,4 +1,3 @@
-import { getIp } from "../defaults";
 import { Fire, FirePeripheral } from "../peripherals/fire";
 import { Lcd, LcdPeripheral } from "../peripherals/lcd";
 import { PixelDisplay, PixelDisplayPeripheral } from "../peripherals/pixelDisplay";
@@ -390,9 +389,8 @@ export const processor: Processor<PeripheralType> = {
     "33": {
       description: "Jump to address <data>",
       execute: (ps) => {
-        const ipName = getIp(ps.processor);
         const address = State.getArgument(ps);
-        State.setRegister(ps, ipName, address);
+        State.setIp(ps, address);
       },
       ipIncrement: 2,
       mnemonic: "JMP"
@@ -401,9 +399,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 == 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") === 0) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -413,9 +410,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 != 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") !== 0) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -425,9 +421,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 == 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") === State.getRegister(ps, "R1")) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -437,9 +432,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 != 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") !== State.getRegister(ps, "R1")) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -449,9 +443,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 < 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") < State.getRegister(ps, "R1")) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -461,9 +454,8 @@ export const processor: Processor<PeripheralType> = {
       description: "Jump to address <data> if R0 <= 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") <= State.getRegister(ps, "R1")) {
-          const ipName = getIp(ps.processor);
           const address = State.getArgument(ps);
-          State.setRegister(ps, ipName, address);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2,
@@ -483,8 +475,7 @@ export const processor: Processor<PeripheralType> = {
       description: "Return (Pop into IP)",
       execute: (ps) => {
         const sp = State.getRegister(ps, "SP");
-        const ipName = getIp(ps.processor);
-        State.setRegister(ps, ipName, State.getMemoryAddress(ps, sp));
+        State.setIp(ps, State.getMemoryAddress(ps, sp));
         State.setRegister(ps, "SP", sp + 1);
       },
       ipIncrement: 1,
@@ -505,12 +496,11 @@ export const processor: Processor<PeripheralType> = {
       description: "Call function at address [data] (Push IP and Jump)",
       execute: (ps) => {
         const address = State.getArgument(ps);
-        const ipName = getIp(ps.processor);
-        const ip = State.getRegister(ps, ipName);
+        const ip = State.getIp(ps);
         const sp = State.getRegister(ps, "SP") - 1;
         State.setRegister(ps, "SP", sp);
         State.setMemoryAddress(ps, sp, ip);
-        State.setRegister(ps, ipName, address);
+        State.setIp(ps, address);
       },
       ipIncrement: 2,
       mnemonic: "CALL"

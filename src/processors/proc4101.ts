@@ -1,4 +1,3 @@
-import { getIp } from "../defaults";
 import { Lcd, LcdPeripheral } from "../peripherals/lcd";
 import { Speaker, SpeakerPeripheral } from "../peripherals/speaker";
 import { ProcessorState as State } from "../state";
@@ -87,8 +86,7 @@ export const processor: Processor<Lcd & Speaker> = {
       description: "Print <data> (numerical value is printed)",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const value = State.getMemoryAddress(ps, ip - 1);
+        const value = State.getArgument(ps);
 
         lcd.printAscii(peripherals, value);
       },
@@ -97,8 +95,7 @@ export const processor: Processor<Lcd & Speaker> = {
     {
       description: "Load value at address <data> into R0",
       execute: (ps) => {
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const address = State.getMemoryAddress(ps, ip-1);
+        const address = State.getArgument(ps);
         
         State.setRegister(ps, "R0", State.getMemoryAddress(ps, address));
       },
@@ -107,8 +104,7 @@ export const processor: Processor<Lcd & Speaker> = {
     {
       description: "Load value at address <data> into R1",
       execute: (ps) => {
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const address = State.getMemoryAddress(ps, ip-1);
+        const address = State.getArgument(ps);
         
         State.setRegister(ps, "R1", State.getMemoryAddress(ps, address));
       },
@@ -117,8 +113,7 @@ export const processor: Processor<Lcd & Speaker> = {
     {
       description: "Store R0 into address <data>",
       execute: (ps) => {
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const address = State.getMemoryAddress(ps, ip-1);
+        const address = State.getArgument(ps);
         
         State.setMemoryAddress(ps, address, State.getRegister(ps, "R0"));
       },
@@ -127,8 +122,7 @@ export const processor: Processor<Lcd & Speaker> = {
     {
       description: "Store R1 into address <data>",
       execute: (ps) => {
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const address = State.getMemoryAddress(ps, ip-1);
+        const address = State.getArgument(ps);
         
         State.setMemoryAddress(ps, address, State.getRegister(ps, "R1"));
       },
@@ -137,10 +131,8 @@ export const processor: Processor<Lcd & Speaker> = {
     {
       description: "Jump to address <data>",
       execute: (ps) => {
-        const ipName = getIp(ps.processor);
-        const ip = State.getRegister(ps, getIp(ps.processor));
-        const address = State.getMemoryAddress(ps, ip-1);
-        State.setRegister(ps, ipName, address);
+        const address = State.getArgument(ps);
+        State.setIp(ps, address);
       },
       ipIncrement: 2
     },
@@ -148,10 +140,8 @@ export const processor: Processor<Lcd & Speaker> = {
       description: "Jump to address <data> if R0 == 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") === 0) {
-          const ipName = getIp(ps.processor);
-          const ip = State.getRegister(ps, getIp(ps.processor));
-          const address = State.getMemoryAddress(ps, ip-1);
-          State.setRegister(ps, ipName, address);
+          const address = State.getArgument(ps);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2
@@ -160,10 +150,8 @@ export const processor: Processor<Lcd & Speaker> = {
       description: "Jump to address <data> if R0 != 0",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") !== 0) {
-          const ipName = getIp(ps.processor);
-          const ip = State.getRegister(ps, getIp(ps.processor));
-          const address = State.getMemoryAddress(ps, ip-1);
-          State.setRegister(ps, ipName, address);
+          const address = State.getArgument(ps);
+          State.setIp(ps, address);
         }
       },
       ipIncrement: 2

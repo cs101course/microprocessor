@@ -1,13 +1,14 @@
-import { ProcessorState as PS } from "./types";
+import { ProcessorState as PS, Processor as P } from "./types";
 import { ProcessorState } from "./state";
-import { getIp, getIs, getPipeline } from "./defaults";
 
 export namespace Processor {
-  export const fetch = <T>(ps: PS<T>) => {
-    const memoryAddress = ProcessorState.getRegister(ps, getIp(ps.processor));
-    const instruction = ProcessorState.getMemoryAddress(ps, memoryAddress);
+  export const defaultPipeline = [Processor.fetch, Processor.increment, Processor.execute];
+  export const getPipeline = <T>(processor: P<T>) => processor.pipeline || defaultPipeline;
 
-    ProcessorState.setRegister(ps, getIs(ps.processor), instruction);
+  export const fetch = <T>(ps: PS<T>) => {
+    const memoryAddress = ProcessorState.getIp(ps);
+    const instruction = ProcessorState.getMemoryAddress(ps, memoryAddress);
+    ProcessorState.setIs(ps, instruction);
   };
 
   const getInstruction = <T>(ps: PS<T>, instructionNumber: number) => {
@@ -22,10 +23,8 @@ export namespace Processor {
   };
 
   export const increment = <T>(ps: PS<T>) => {
-    const ipName = getIp(ps.processor);
-
-    const ip = ProcessorState.getRegister(ps, ipName);
-    const instructionNumber = ProcessorState.getRegister(ps, getIs(ps.processor));
+    const ip = ProcessorState.getIp(ps);
+    const instructionNumber = ProcessorState.getIs(ps);
 
     let ipIncrement = 1;
     const instruction = getInstruction(ps, instructionNumber);
@@ -33,11 +32,11 @@ export namespace Processor {
       ipIncrement = instruction.ipIncrement;
     }
 
-    ProcessorState.setRegister(ps, ipName, ip + ipIncrement);
+    ProcessorState.setIp(ps, ip + ipIncrement);
   };
 
   export const execute = <T>(ps: PS<T>) => {
-    const instructionNumber = ProcessorState.getRegister(ps, getIs(ps.processor));
+    const instructionNumber = ProcessorState.getIs(ps);
 
     const instruction = getInstruction(ps, instructionNumber);
     if (instruction) {
@@ -52,7 +51,7 @@ export namespace Processor {
       const pipeline = getPipeline(ps.processor);
       const stepFunction = pipeline[ps.state.pipelineStep];
       stepFunction(ps);
-      ProcessorState.nextStep(ps);
+      ProcessorState.nextStep(ps, pipeline);
     }
   };
 

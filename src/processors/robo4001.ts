@@ -1,4 +1,3 @@
-import { getIp } from "../defaults";
 import { Robot, RobotPeripheral } from "../peripherals/robot";
 import { Speaker, SpeakerPeripheral } from "../peripherals/speaker";
 import { ProcessorState as State } from "../state";

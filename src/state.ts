@@ -1,5 +1,7 @@
-import { Processor, State, ProcessorState as PS } from "./types";
-import { getIp, getIs, getPipeline } from "./defaults";
+import { Processor, State, ProcessorState as PS, Processor as P, PipelineStep } from "./types";
+
+const getIpName = <T>(processor: P<T>) => processor.ipName || "IP";
+const getIsName = <T>(processor: P<T>) => processor.isName || "IS";
 
 const constrainRegister = <T>(
   processor: Processor<T>,
@@ -7,7 +9,7 @@ const constrainRegister = <T>(
   value: number
 ) => {
   const mask = (1 << processor.registerBitSize) - 1;
-  const ipName = getIp(processor);
+  const ipName = getIpName(processor);
   const newValue = value & mask;
 
   if (register === ipName) {
@@ -62,6 +64,9 @@ export namespace ProcessorState {
     return ps.state.registers[register];
   };
 
+  export const getIp = <T>(ps: PS<T>): number => getRegister(ps, getIpName(ps.processor));
+  export const getIs = <T>(ps: PS<T>): number => getRegister(ps, getIsName(ps.processor));
+
   export const setRegister = <T>(
     ps: PS<T>,
     register: string,
@@ -73,6 +78,9 @@ export namespace ProcessorState {
       value
     );
   };
+
+  export const setIp = <T>(ps: PS<T>, value: number): void => setRegister(ps, getIpName(ps.processor), value);
+  export const setIs = <T>(ps: PS<T>, value: number): void => setRegister(ps, getIsName(ps.processor), value);
 
   export const getMemoryAddress = <T>(ps: PS<T>, address: number): number => {
     return ps.state.memory[constrainAddress(ps.processor, address)];
@@ -112,17 +120,17 @@ export namespace ProcessorState {
   };
 
   export const getArgument = <T>(ps: PS<T>, argument=1) => {
-    const ip = ProcessorState.getRegister(ps, getIp(ps.processor));
-    const is = ProcessorState.getRegister(ps, getIs(ps.processor));
+    const ip = ProcessorState.getIp(ps);
+    const is = ProcessorState.getIs(ps);
     const instruction = ps.processor.instructions[is];
     const argumentAddress = ip - (instruction.ipIncrement - argument);
 
     return ProcessorState.getMemoryAddress(ps, argumentAddress);
   };
 
-  export const nextStep = <T>(ps: PS<T>) => {
+  export const nextStep = <T>(ps: PS<T>, pipeline: Array<PipelineStep<T>>) => {
     ps.state.pipelineStep =
-      (ps.state.pipelineStep + 1) % getPipeline(ps.processor).length;
+      (ps.state.pipelineStep + 1) % pipeline.length;
     if (ps.state.pipelineStep === 0) {
       ps.state.executionStep += 1;
     }
