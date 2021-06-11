@@ -6,6 +6,7 @@ export interface Instruction<T> {
   description: string;
   ipIncrement: number;
   execute: ExecutionFunction<T>;
+  mnemonic?: string;
 }
 
 export interface State<T> {
@@ -21,12 +22,13 @@ export interface Processor<T> {
   memoryBitSize: number;
   registerBitSize: number;
   numMemoryAddresses: number;
-  instructions: Array<Instruction<T>>;
+  instructions: Array<Instruction<T>> | Record<number, Instruction<T>>;
   registerNames: Array<string>;
   peripherals: Array<Peripheral<T>>;
   pipeline?: Array<PipelineStep<T>>;
   ipName?: string;
   isName?: string;
+  getUndocumentedInstruction?: (instruction: number) => Instruction<T>;
 }
 
 export interface ProcessorState<T> {

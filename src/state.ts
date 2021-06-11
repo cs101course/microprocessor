@@ -111,6 +111,15 @@ export namespace ProcessorState {
     });
   };
 
+  export const getArgument = <T>(ps: PS<T>, argument=1) => {
+    const ip = ProcessorState.getRegister(ps, getIp(ps.processor));
+    const is = ProcessorState.getRegister(ps, getIs(ps.processor));
+    const instruction = ps.processor.instructions[is];
+    const argumentAddress = ip - (instruction.ipIncrement - argument);
+
+    return ProcessorState.getMemoryAddress(ps, argumentAddress);
+  };
+
   export const nextStep = <T>(ps: PS<T>) => {
     ps.state.pipelineStep =
       (ps.state.pipelineStep + 1) % getPipeline(ps.processor).length;

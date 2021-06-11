@@ -1,15 +1,25 @@
 import { Peripheral } from "../types";
 
 export type Speaker = {
-  numBeeps: number;
+  audioBuffer: Array<number>;
+  playbackIndex: number;
 };
+
+export type AudioHandler = (pitch: number, length: number) => void;
+
+const DEFAULT_PITCH = 128;
 
 export class SpeakerPeripheral implements Peripheral<Speaker> {
   reset(state: Speaker) {
-    state.numBeeps = 0;
+    state.audioBuffer = [];
+    state.playbackIndex = 0;
   }
 
   beep(state: Speaker) {
-    state.numBeeps += 1
+    state.audioBuffer.push(DEFAULT_PITCH);
+  }
+
+  sound(state: Speaker, pitch: number) {
+    state.audioBuffer.push(pitch);
   }
 }

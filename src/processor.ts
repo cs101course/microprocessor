@@ -10,6 +10,17 @@ export namespace Processor {
     ProcessorState.setRegister(ps, getIs(ps.processor), instruction);
   };
 
+  const getInstruction = <T>(ps: PS<T>, instructionNumber: number) => {
+    let instruction = null;
+    if (instructionNumber in ps.processor.instructions) {
+      instruction = ps.processor.instructions[instructionNumber];
+    } else if (ps.processor.getUndocumentedInstruction) {
+      instruction = ps.processor.getUndocumentedInstruction(instructionNumber);
+    }
+
+    return instruction;
+  };
+
   export const increment = <T>(ps: PS<T>) => {
     const ipName = getIp(ps.processor);
 
@@ -17,8 +28,8 @@ export namespace Processor {
     const instructionNumber = ProcessorState.getRegister(ps, getIs(ps.processor));
 
     let ipIncrement = 1;
-    if (instructionNumber < ps.processor.instructions.length) {
-      const instruction = ps.processor.instructions[instructionNumber];
+    const instruction = getInstruction(ps, instructionNumber);
+    if (instruction) {
       ipIncrement = instruction.ipIncrement;
     }
 
@@ -28,9 +39,11 @@ export namespace Processor {
   export const execute = <T>(ps: PS<T>) => {
     const instructionNumber = ProcessorState.getRegister(ps, getIs(ps.processor));
 
-    if (instructionNumber < ps.processor.instructions.length) {
-      const instruction = ps.processor.instructions[instructionNumber];
+    const instruction = getInstruction(ps, instructionNumber);
+    if (instruction) {
       instruction.execute(ps);
+    } else {
+      ps.state.isHalted = true;
     }
   };
 

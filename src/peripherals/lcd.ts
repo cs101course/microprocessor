@@ -16,4 +16,8 @@ export class LcdPeripheral implements Peripheral<Lcd> {
   printAscii(state: Lcd, value: number) {
     state.lcdOutput += String.fromCharCode(value);
   }
+
+  printString(state: Lcd, value: string) {
+    state.lcdOutput += value;
+  }
 }
