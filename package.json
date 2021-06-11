@@ -1,7 +1,8 @@
 {
   "name": "@cs101/microprocessor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/cs101course/microprocessor.git"
@@ -17,12 +18,15 @@
     "build": "tsc",
     "prepare": "npm run build",
     "version": "git add -A src",
-    "postversion" : "git push && git push --tags"
+    "postversion": "git push && git push --tags"
   },
   "devDependencies": {
     "typescript": "^4.2.4"
   },
   "dependencies": {
     "@types/node": "^15.12.2"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
