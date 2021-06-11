@@ -14,9 +14,15 @@
   },
   "homepage": "https://github.com/cs101course/microprocessor#readme",
   "scripts": {
-    "test": "test"
+    "build": "tsc",
+    "prepare": "npm run build",
+    "version": "git add -A src",
+    "postversion" : "git push && git push --tags"
   },
   "devDependencies": {
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "@types/node": "^15.12.2"
   }
 }
