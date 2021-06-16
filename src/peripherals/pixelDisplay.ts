@@ -23,14 +23,17 @@ export interface Pixel {
 
 export interface PixelDisplay {
   pixels: Array<Pixel>;
+  pixelUpdates: 0;
 }
 
 export class PixelDisplayPeripheral implements Peripheral<PixelDisplay> {
   reset(state: PixelDisplay) {
     state.pixels = Array(width * height).fill(colors[0]);
+    state.pixelUpdates = 0;
   }
 
   plot(state: PixelDisplay, x: number, y: number, value: number) {
     state.pixels[width * y + x] = colors[value];
+    state.pixelUpdates++;
   }
 }
