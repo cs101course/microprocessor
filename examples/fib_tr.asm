@@ -1,7 +1,7 @@
 // Main
 // Push parameters
 // n
-LDR0 100
+LDR0 13
 PUSH
 
 // b
@@ -21,44 +21,46 @@ POP
 
 SWAP
 PRINT
+HALT
 
 
 FIB:
 
 // N.B.
-// n is (Frame+3)
-// b is (Frame+2)
-// a is (Frame+1)
+// n is (Frame+4)
+// b is (Frame+3)
+// a is (Frame+2)
+// return address is (Frame+1)
 
 // locals
 PUSH       // result (Frame+0)
 // End initialisation
 
 // result := a
-LSR0 1
+LSR0 2
 SSR0 0
 
 // IF (n != 0)
 // (unless n == 0)
 
-LDR0 0     // R0 := n
+LSR0 4     // R0 := n
 JZ FIB_END_IF
 
 // Push parameters
 
 // n - 1
-LSR0 3
+LSR0 4
 DEC
 PUSH
 
 // a + b
-LSR0 1
-LSR1 2
+LSR0 3 // account for push (2+1)
+LSR1 4 // account for push (3+1)
 ADD
 PUSH
 
 // b
-LSR0 2
+LSR0 5 // account for push (3+2)
 PUSH
 
 // recurse

@@ -418,7 +418,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "JNZ"
     },
     "36": {
-      description: "Jump to address <data> if R0 == 0",
+      description: "Jump to address <data> if R0 == R1",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") === State.getRegister(ps, "R1")) {
           const address = State.getArgument(ps);
@@ -429,7 +429,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "JE"
     },
     "37": {
-      description: "Jump to address <data> if R0 != 0",
+      description: "Jump to address <data> if R0 != R1",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") !== State.getRegister(ps, "R1")) {
           const address = State.getArgument(ps);
@@ -440,7 +440,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "JNE"
     },
     "38": {
-      description: "Jump to address <data> if R0 < 0",
+      description: "Jump to address <data> if R0 < R1",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") < State.getRegister(ps, "R1")) {
           const address = State.getArgument(ps);
@@ -451,7 +451,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "JB"
     },
     "39": {
-      description: "Jump to address <data> if R0 <= 0",
+      description: "Jump to address <data> if R0 <= R1",
       execute: (ps) => {
         if (State.getRegister(ps, "R0") <= State.getRegister(ps, "R1")) {
           const address = State.getArgument(ps);
@@ -529,7 +529,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "PRINTC"
     },
     "66": {
-      description: "Play a sound at pitch R0",
+      description: "Play a sound (R0 specifies the sound)",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);
         const r0 = State.getRegister(ps, "R0");
