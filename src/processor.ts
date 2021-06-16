@@ -3,8 +3,7 @@ import { ProcessorState } from "./state";
 
 export namespace Processor {
   export const getPipeline = <T>(processor: P<T>) => {
-    const defaultPipeline = [Processor.fetch, Processor.increment, Processor.execute];
-    return processor.pipeline || defaultPipeline;
+    return processor.pipeline || [Processor.fetch, Processor.increment, Processor.execute];
   };
 
   export const fetch = <T>(ps: PS<T>) => {

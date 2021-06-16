@@ -1,5 +1,45 @@
 import { Processor } from "../types";
 
+export const getSourceMap = (code: string) => {
+  const lines = code.split("\n");
+  const sourceMap: Record<number, [number, number]> = {};
+
+  let instructionNum = 0;
+  for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+    const line = lines[lineNum];
+    const strippedLine = line.split("//")[0];
+    let lastBreak = 0;
+    let skipInstruction = false;
+    let prevSpace = true;
+    for (let col = 0; col < strippedLine.length; col++) {
+      const chr = strippedLine.charAt(col);
+      if (/\s/.test(chr) || col === strippedLine.length - 1) {
+        if (chr === ":") {
+          skipInstruction = true;
+        }
+
+        if (!skipInstruction && !prevSpace) {
+          sourceMap[instructionNum] = [lineNum, lastBreak];
+        
+          instructionNum++;
+          skipInstruction = false;
+        }
+
+        lastBreak = col + 1;
+        prevSpace = true;
+      } else if (chr === ":") {
+        skipInstruction = true;
+        prevSpace = false;
+      } else {
+        skipInstruction = false;
+        prevSpace = false;
+      }
+    }
+  }
+
+  return sourceMap;
+};
+
 export const assemble = <T>(processor: Processor<T>, code: string): Array<number> => {
   const lines = code.split("\n");
   const strippedLines = lines.map(
