@@ -51,13 +51,13 @@ JZ FIB_END_IF
 // n - 1
 LSR0 4
 DEC
-PUSH
+PUSH // (+1 from stack frame)
 
 // a + b
 LSR0 3 // account for push (2+1)
 LSR1 4 // account for push (3+1)
 ADD
-PUSH
+PUSH // (+2 from stack frame)
 
 // b
 LSR0 5 // account for push (3+2)
