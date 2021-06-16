@@ -27,7 +27,7 @@ export interface PixelDisplay {
 
 export class PixelDisplayPeripheral implements Peripheral<PixelDisplay> {
   reset(state: PixelDisplay) {
-    state.pixels = Array(width * height).fill(0);
+    state.pixels = Array(width * height).fill(colors[0]);
   }
 
   plot(state: PixelDisplay, x: number, y: number, value: number) {
