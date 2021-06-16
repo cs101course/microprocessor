@@ -2,8 +2,10 @@ import { ProcessorState as PS, Processor as P } from "./types";
 import { ProcessorState } from "./state";
 
 export namespace Processor {
-  export const defaultPipeline = [Processor.fetch, Processor.increment, Processor.execute];
-  export const getPipeline = <T>(processor: P<T>) => processor.pipeline || defaultPipeline;
+  export const getPipeline = <T>(processor: P<T>) => {
+    const defaultPipeline = [Processor.fetch, Processor.increment, Processor.execute];
+    return processor.pipeline || defaultPipeline;
+  };
 
   export const fetch = <T>(ps: PS<T>) => {
     const memoryAddress = ProcessorState.getIp(ps);
