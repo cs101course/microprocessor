@@ -34,9 +34,6 @@ export interface Processor<T> {
 export interface ProcessorState<T> {
   processor: Processor<T>;
   state: State<T>;
-  ipName: string;
-  isName: string;
-  pipeline: Array<PipelineStep<T>>;
 }
 
 export interface Peripheral<T> {
