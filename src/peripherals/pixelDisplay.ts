@@ -2,8 +2,8 @@ import { ProcessorState, Peripheral } from "../types"
 
 import { colors } from "./xTermColors"
 
-const width = 640;
-const height = 480;
+const width = 256;
+const height = 256;
 
 export interface Pixel {
   colorId: number;
