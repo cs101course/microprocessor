@@ -23,7 +23,7 @@ export interface Pixel {
 
 export interface PixelDisplay {
   pixels: Array<Pixel>;
-  pixelUpdates: 0;
+  pixelUpdates: number;
 }
 
 export class PixelDisplayPeripheral implements Peripheral<PixelDisplay> {
