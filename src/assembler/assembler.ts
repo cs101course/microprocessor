@@ -88,6 +88,8 @@ export const assemble = <T>(processor: Processor<T>, code: string): Array<number
       return mnemonicLookup[byteLabel]
     } else if (byteLabel.length === 3 && byteLabel.startsWith("'") && byteLabel.endsWith("'")) {
       return byteLabel.charCodeAt(1);
+    } else if (byteLabel.startsWith("0b") || byteLabel.startsWith("0x")) {
+      return Number(byteLabel);
     } else {
       const instructionNumber = Number(byteLabel);
       if (!isNaN(instructionNumber)) {
