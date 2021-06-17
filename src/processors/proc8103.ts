@@ -445,7 +445,7 @@ export const processor: Processor<PeripheralType> = {
         }
       },
       ipIncrement: 2,
-      mnemonic: "JBE"
+      mnemonic: "JZP"
     },
     "40": {
       description: "Jump to address <data> if (PORT & R0) != 0",
@@ -456,7 +456,7 @@ export const processor: Processor<PeripheralType> = {
         }
       },
       ipIncrement: 2,
-      mnemonic: "JPNE"
+      mnemonic: "JNZP"
     },
     "41": {
       description: "Jump to address <data> if (PORT & R0) == 0",
@@ -467,7 +467,7 @@ export const processor: Processor<PeripheralType> = {
         }
       },
       ipIncrement: 2,
-      mnemonic: "JPNE"
+      mnemonic: "JPZ"
     },
     "48": {
       description: "Pop (into R0)",
