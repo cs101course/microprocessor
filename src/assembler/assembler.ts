@@ -13,12 +13,16 @@ export const getSourceMap = (code: string) => {
     let prevSpace = true;
     for (let col = 0; col < strippedLine.length; col++) {
       const chr = strippedLine.charAt(col);
-      if (/\s/.test(chr) || col === strippedLine.length - 1) {
+      const isSpace = /\s/.test(chr);
+      if (prevSpace && isSpace) {
+        lastBreak = col + 1;
+        prevSpace = true;
+      } else if (isSpace || col === strippedLine.length - 1) {
         if (chr === ":") {
           skipInstruction = true;
         }
 
-        if (!skipInstruction && !prevSpace) {
+        if (!skipInstruction) {
           sourceMap[instructionNum] = [lineNum, lastBreak];
         
           instructionNum++;
