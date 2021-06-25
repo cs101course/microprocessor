@@ -7,6 +7,7 @@ export interface Instruction<T> {
   ipIncrement: number;
   execute: ExecutionFunction<T>;
   mnemonic?: string;
+  code?: string;
 }
 
 export interface State<T> {
@@ -29,6 +30,7 @@ export interface Processor<T> {
   ipName?: string;
   isName?: string;
   getUndocumentedInstruction?: (instruction: number) => Instruction<T>;
+  columns?: Array<"number" | "mnemonic" | "increment" | "description" | "code">;
 }
 
 export interface ProcessorState<T> {

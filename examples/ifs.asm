@@ -17,14 +17,14 @@ LDR0 255 // x
 SR0 CX
 
 // PT
-27
+63
 SR0 PTY// y
-27
+63
 SR0 PTX // x
 
 START:
 
-27 // Which of A, B, or C?
+63 // Which of A, B, or C?
 LDR1 3
 MOD
 
