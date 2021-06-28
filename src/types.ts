@@ -26,6 +26,7 @@ export interface Processor<T> {
   instructions: Array<Instruction<T>> | Record<number, Instruction<T>>;
   registerNames: Array<string>;
   peripherals: Array<Peripheral<T>>;
+  name?: string;
   pipeline?: Array<PipelineStep<T>>;
   ipName?: string;
   isName?: string;
