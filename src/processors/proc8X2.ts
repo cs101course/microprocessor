@@ -53,7 +53,7 @@ const undocumentedInstructions: Record<string, Instruction<PeripheralType>> = {
     },
     ipIncrement: 1
   },
-  "68-255": {
+  "69-255": {
     description: "Undefined",
     execute: (ps) => {
       const peripherals = State.getPeripherals(ps);
@@ -90,13 +90,26 @@ export const processor: Processor<PeripheralType> = {
       lookup = "43-47";
     } else if (instruction >= 52 && instruction <= 63) {
       lookup = "52-63";
-    } else if (instruction >= 67) {
-      lookup = "68-255";
+    } else if (instruction >= 69) {
+      lookup = "69-255";
     } else {
       lookup = instruction;
     }
+    
+    const result = undocumentedInstructions[lookup];
 
-    return undocumentedInstructions[lookup];
+    if (result) {
+      return result;
+    } else {
+      return {
+        description: "Undefined",
+        execute: (ps) => {
+          const peripherals = State.getPeripherals(ps);
+          fire.catchFire(peripherals);
+        },
+        ipIncrement: 1
+      }
+    }
   },
   instructions: {
     "0": {
@@ -587,7 +600,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "PRINTC",
       code: "printf(\"%c\", R0)"
     },
-    "66": {
+    "67": {
       description: "Play a sound (R0 specifies the sound)",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);
@@ -598,7 +611,7 @@ export const processor: Processor<PeripheralType> = {
       ipIncrement: 1,
       mnemonic: "SOUND"
     },
-    "67": {
+    "68": {
       description: "Plot pixel <data> at coordinate R0, R1",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);

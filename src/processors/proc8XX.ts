@@ -47,14 +47,14 @@ const undocumentedInstructions: Record<string, Instruction<PeripheralType>> = {
     },
     ipIncrement: 1
   },
-  "54-63": {
+  "55-63": {
     description: "Undefined",
     execute: (ps) => {
       State.setRegister(ps, "R0", randByte());
     },
     ipIncrement: 1
   },
-  "68-255": {
+  "69-255": {
     description: "Undefined",
     execute: (ps) => {
       const peripherals = State.getPeripherals(ps);
@@ -87,15 +87,28 @@ export const processor: Processor<PeripheralType> = {
 
     if (instruction >= 43 && instruction <= 47) {
       lookup = "43-47";
-    } else if (instruction >= 52 && instruction <= 63) {
-      lookup = "54-63";
-    } else if (instruction >= 67) {
-      lookup = "68-255";
+    } else if (instruction >= 55 && instruction <= 63) {
+      lookup = "55-63";
+    } else if (instruction >= 69) {
+      lookup = "69-255";
     } else {
       lookup = instruction;
     }
 
-    return undocumentedInstructions[lookup];
+    const result = undocumentedInstructions[lookup];
+
+    if (result) {
+      return result;
+    } else {
+      return {
+        description: "Undefined",
+        execute: (ps) => {
+          const peripherals = State.getPeripherals(ps);
+          fire.catchFire(peripherals);
+        },
+        ipIncrement: 1
+      }
+    }
   },
   instructions: {
     "0": {
@@ -610,21 +623,31 @@ export const processor: Processor<PeripheralType> = {
       code: "SP = SP - 1; *(SP) = IP; IP = <data>"
     },
     "52": {
-      description: "Allocates <data> bytes on a new call frame",
+      description: "Subtract <data> from SP",
       execute: (ps) => {
         const bytes = State.getArgument(ps);
+        const sp = State.getRegister(ps, "SP");
+        State.setRegister(ps, "SP", sp + bytes);
+      },
+      ipIncrement: 2,
+      mnemonic: "SUBSP",
+      code: "SP = SP - <data>"
+    },
+    "53": {
+      description: "Creates a new call frame",
+      execute: (ps) => {
         const bp = State.getRegister(ps, "BP");
         const sp = State.getRegister(ps, "SP") - 1;
 
+        State.setRegister(ps, "SP", sp);
         State.setMemoryAddress(ps, sp, bp);
         State.setRegister(ps, "BP", sp);
-        State.setRegister(ps, "SP", sp - bytes);
       },
-      ipIncrement: 2,
+      ipIncrement: 1,
       mnemonic: "ENTER",
-      code: "SP = SP - 1; *(SP) = BP; BP = SP; SP = SP - <data>"
+      code: "SP = SP - 1; *(SP) = BP; BP = SP"
     },
-    "53": {
+    "54": {
       description: "Restores old call frame",
       execute: (ps) => {
         const bp = State.getRegister(ps, "BP");
@@ -636,7 +659,7 @@ export const processor: Processor<PeripheralType> = {
       },
       ipIncrement: 1,
       mnemonic: "LEAVE",
-      code: "SP = BP; BP = *(SP); SP = SP + 1;"
+      code: "SP = BP; BP = *(SP); SP = SP + 1"
     },
 
     "64": {
@@ -663,7 +686,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "PRINTC",
       code: "printf(\"%c\", R0)"
     },
-    "66": {
+    "67": {
       description: "Play a sound (R0 specifies the sound)",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);
@@ -674,7 +697,7 @@ export const processor: Processor<PeripheralType> = {
       ipIncrement: 1,
       mnemonic: "SOUND"
     },
-    "67": {
+    "68": {
       description: "Plot pixel <data> at coordinate R0, R1",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);

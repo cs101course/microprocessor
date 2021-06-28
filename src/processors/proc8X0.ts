@@ -21,7 +21,7 @@ const undocumentedInstructions: Record<string, Instruction<PeripheralType>> = {
     },
     ipIncrement: 1
   },
-  "67-255": {
+  "68-255": {
     description: "Undefined",
     execute: (ps) => {
       const peripherals = State.getPeripherals(ps);
@@ -53,8 +53,8 @@ export const processor: Processor<PeripheralType> = {
 
     if (instruction >= 36 && instruction <= 63) {
       lookup = "36-63";
-    } else if (instruction >= 67) {
-      lookup = "67-255";
+    } else if (instruction >= 68) {
+      lookup = "68-255";
     } else {
       lookup = instruction;
     }
@@ -291,7 +291,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "PRINTC",
       code: "printf(\"%c\", R0)"
     },
-    "66": {
+    "67": {
       description: "Play a sound (R0 specifies the sound)",
       execute: (ps) => {
         const peripherals = State.getPeripherals(ps);
