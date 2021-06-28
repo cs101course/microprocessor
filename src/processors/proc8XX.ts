@@ -17,13 +17,6 @@ type PeripheralType = Lcd & Speaker & PixelDisplay & Fire;
 
 
 const undocumentedInstructions: Record<string, Instruction<PeripheralType>> = {
-  "31": {
-    description: "Undefined",
-    execute: (ps) => {
-      State.setMemoryAddress(ps, randByte(), randByte());
-    },
-    ipIncrement: 1
-  },
   "42": {
     description: "Undefined",
     execute: (ps) => {
@@ -450,7 +443,18 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "SBR1",
       code: "*(BP - <data>) = R1"
     },
+    "31": {
+      description: "Load (argument) value at address BP+<data> into R0",
+      execute: (ps) => {
+        const data = State.getArgument(ps);
+        const bp = State.getRegister(ps, "BP");
 
+        State.setRegister(ps, "R0", State.getMemoryAddress(ps, bp + data));
+      },
+      ipIncrement: 2,
+      mnemonic: "LAR0",
+      code: "R0 = *(BP + <data>)"
+    },
     "32": {
       description: "Compare R0 with value at address <data>",
       execute: (ps) => {
@@ -623,17 +627,28 @@ export const processor: Processor<PeripheralType> = {
       code: "SP = SP - 1; *(SP) = IP; IP = <data>"
     },
     "52": {
-      description: "Subtract <data> from SP",
+      description: "Add <data> to SP (Shrink the stack)",
       execute: (ps) => {
         const bytes = State.getArgument(ps);
         const sp = State.getRegister(ps, "SP");
         State.setRegister(ps, "SP", sp + bytes);
       },
       ipIncrement: 2,
+      mnemonic: "ADDSP",
+      code: "SP = SP + <data>"
+    },
+    "53": {
+      description: "Subtract <data> from SP (Grow the stack)",
+      execute: (ps) => {
+        const bytes = State.getArgument(ps);
+        const sp = State.getRegister(ps, "SP");
+        State.setRegister(ps, "SP", sp - bytes);
+      },
+      ipIncrement: 2,
       mnemonic: "SUBSP",
       code: "SP = SP - <data>"
     },
-    "53": {
+    "54": {
       description: "Creates a new call frame",
       execute: (ps) => {
         const bp = State.getRegister(ps, "BP");
@@ -647,7 +662,7 @@ export const processor: Processor<PeripheralType> = {
       mnemonic: "ENTER",
       code: "SP = SP - 1; *(SP) = BP; BP = SP"
     },
-    "54": {
+    "55": {
       description: "Restores old call frame",
       execute: (ps) => {
         const bp = State.getRegister(ps, "BP");
