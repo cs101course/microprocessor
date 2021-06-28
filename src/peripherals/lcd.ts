@@ -14,7 +14,13 @@ export class LcdPeripheral implements Peripheral<Lcd> {
   }
 
   printAscii(state: Lcd, value: number) {
-    state.lcdOutput += String.fromCharCode(value);
+    if (value === 8) {
+      state.lcdOutput = state.lcdOutput.slice(0, -1);
+    } else if (value === 12) {
+      state.lcdOutput = "";
+    } else {
+      state.lcdOutput += String.fromCharCode(value);
+    }
   }
 
   printString(state: Lcd, value: string) {
